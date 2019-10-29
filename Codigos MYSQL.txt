@@ -1,0 +1,16 @@
+insert into venda(DATA, CODIGO_CLIENTE, CODIGO_FORMA_PAG) values(NOW(), 3, 2);        //NOW() = Pega a data atual do sistema
+
+update item_venda, produto 
+       set item_venda.PRECO_UNIT=produto.PRECO,  item_venda.PRECO_TOTAL=item_venda.QUANTIDADE*produto.PRECO 
+       where item_venda.CODIGO_PRODUTO=produto.CODIGO_PRODUTO;
+
+insert into item_venda (CODIGO_VENDA, item_venda.CODIGO_PRODUTO, QUANTIDADE) values (1, 1, 10);
+
+insert into venda(DATA, CODIGO_CLIENTE, CODIGO_FORMA_PAG) values(NOW(), 1, 4);
+
+insert into cliente (NOME, CPF, ESTADO, CIDADE, BAIRRO, RUA, TELEFONE, EMAIL) values("Vitor Carlos", "188.888.888-88", "RJ", "Petropolis", "Quissama", "Quissama", "(24)2222-2222", "Vitorcarlos2014soares@gmail.com");
+
+insert into forma_pagamento (NOME) values("Credito");
+
+insert into produto (NOME, PRECO, ESTOQUE) values("Presunto", 4.99, 40);
+

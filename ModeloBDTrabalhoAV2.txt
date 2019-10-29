@@ -1,0 +1,44 @@
+create database java_mercadinho;
+use java_mercadinho;
+
+create table cliente(CODIGO_CLIENTE int primary key auto_increment, 
+		     NOME VARCHAR(50) not null, 
+		     CPF char(15) not null unique, 
+		     ESTADO CHAR(2) not null, 
+		     CIDADE VARCHAR(50) not null, 
+		     BAIRRO VARCHAR(50) not null, 
+		     RUA VARCHAR(30) not null, 
+		     COMPLEMENTO VARCHAR(50), 
+	 	     TELEFONE VARCHAR(20) not null unique, 
+		     EMAIL VARCHAR(50) not null);
+
+create table forma_pagamento(CODIGO_FORMA_PAG int primary key auto_increment, 
+			     NOME VARCHAR(30) not null);
+
+create table item_venda(CODIGO_VENDA int, 
+		        CODIGO_PRODUTO int, 
+			QUANTIDADE int not null, 
+			PRECO_UNIT float, 
+			PRECO_TOTAL float);
+
+create table produto(CODIGO_PRODUTO int primary key auto_increment, 
+		     NOME varchar(50) not null unique, 
+		     PRECO float not null, 
+		     ESTOQUE int not null);
+
+create table venda(CODIGO_VENDA int not null unique auto_increment, 
+		   DATA date not null, 
+		   CODIGO_CLIENTE int, 
+		   PRECO_TOTAL float, 
+		   CODIGO_FORMA_PAG int);
+
+alter table item_venda add (foreign key (CODIGO_VENDA) references venda(CODIGO_VENDA) ON delete cascade ON update cascade, 
+			    foreign key (CODIGO_PRODUTO) references produto(CODIGO_PRODUTO) ON delete cascade ON update cascade,
+			    primary key (CODIGO_VENDA, CODIGO_PRODUTO));
+
+alter table venda add (foreign key (CODIGO_CLIENTE) references cliente(CODIGO_CLIENTE) ON delete cascade ON update cascade, 
+		       foreign key (CODIGO_FORMA_PAG) references forma_pagamento(CODIGO_FORMA_PAG) ON delete cascade ON update cascade,
+		       primary key (CODIGO_VENDA, CODIGO_CLIENTE, CODIGO_FORMA_PAG));
+
+/*alter table venda modify CODIGO_CLIENTE int not null;
+  alter table venda modify CODIGO_FORMA_PAG int not null; */
