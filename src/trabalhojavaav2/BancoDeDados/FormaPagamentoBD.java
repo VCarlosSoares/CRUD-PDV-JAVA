@@ -20,6 +20,46 @@ public class FormaPagamentoBD {
         obterUltimoCodigo();
     }
     
+    private void obterUltimoCodigo() {
+        Connection conexao = SingletonConexao.getInstance().obterConexao();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        if (conexao != null) {
+            try {
+                String sql = "select CODIGO_FORMA_PAG from forma_pagamento "
+                        + "   where CODIGO_FORMA_PAG = (select max(CODIGO_FORMA_PAG) from forma_pagamento);";
+
+                stmt = conexao.prepareStatement(sql);
+                rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    codigo = rs.getInt("CODIGO_FORMA_PAG");
+                }
+            
+                conexao.commit();
+            
+            } catch (SQLException e) {
+                try {
+                    conexao.rollback();
+                } catch (SQLException ex) { }
+            } finally {
+                SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
+            }
+        }
+    }
+    
+    
+    private void prepararComandoAtualizacao(PreparedStatement stmt, FormaPagamento formaPag) throws SQLException{
+        stmt.setString(1, formaPag.obterNome());
+    }
+    
+    private FormaPagamento retornarFormaPagamento(ResultSet rs) throws SQLException{
+        FormaPagamento formaPag = new FormaPagamento();
+        formaPag.atualizarCodigo(rs.getInt("CODIGO_FORMA_PAG"));
+        formaPag.atualizarNome(rs.getString("NOME"));
+        return formaPag;
+    }
+    
     public FormaPagamento inserirFormaPagamento(FormaPagamento formaPag) {
         Connection conexao = SingletonConexao.getInstance().obterConexao();
         PreparedStatement stmt = null;
@@ -30,7 +70,7 @@ public class FormaPagamentoBD {
                
                stmt = conexao.prepareStatement(sql);
                
-               stmt.setString(1, formaPag.obterNome());
+               prepararComandoAtualizacao(stmt, formaPag);
                
                stmt.execute();
                
@@ -59,7 +99,7 @@ public class FormaPagamentoBD {
                
                stmt = conexao.prepareStatement(sql);
                
-               stmt.setString(1, formaPag.obterNome());
+               prepararComandoAtualizacao(stmt, formaPag);
                
                stmt.execute();
                
@@ -112,11 +152,7 @@ public class FormaPagamentoBD {
                 rs = stmt.executeQuery();
                 
                 while (rs.next()) {
-                    FormaPagamento formaPag = new FormaPagamento();
-                    formaPag.atualizarCodigo(rs.getInt("CODIGO_FORMA_PAG"));
-                    formaPag.atualizarNome(rs.getString("NOME"));
-                    
-                    formasPag.add(formaPag);
+                    formasPag.add(retornarFormaPagamento(rs));
                 }
                 
                 conexao.commit();
@@ -134,29 +170,4 @@ public class FormaPagamentoBD {
         return null;
     }
     
-    private void obterUltimoCodigo() {
-        Connection conexao = SingletonConexao.getInstance().obterConexao();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "select CODIGO_FORMA_PAG from forma_pagamento "
-                    + "   where CODIGO_FORMA_PAG = (select max(CODIGO_FORMA_PAG) from forma_pagamento);";
-            
-            stmt = conexao.prepareStatement(sql);
-            rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                codigo = rs.getInt("CODIGO_FORMA_PAG");
-            }
-            
-            conexao.commit();
-            
-        } catch (SQLException e) {
-                try {
-                    conexao.rollback();
-                } catch (SQLException ex) { }
-        } finally {
-            SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
-        }
-    }
 }

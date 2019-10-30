@@ -20,6 +20,50 @@ public class ProdutoBD {
         obterUltimoCodigo();
     }
     
+    private void obterUltimoCodigo() {
+        Connection conexao = SingletonConexao.getInstance().obterConexao();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        if (conexao != null) {
+            try {
+                String sql = "select CODIGO_PRODUTO from produto "
+                        + "   where CODIGO_PRODUTO = (select max(CODIGO_PRODUTO) from produto);";
+
+                stmt = conexao.prepareStatement(sql);
+                rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    codigo = rs.getInt("CODIGO_PRODUTO");
+                }
+            
+                conexao.commit();
+            
+            } catch (SQLException e) {
+                try {
+                    conexao.rollback();
+                } catch (SQLException ex) { }
+            } finally {
+                SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
+            }
+        }
+    }
+    
+    
+    private void prepararComandoAtualizacao(PreparedStatement stmt, Produto produto) throws SQLException{
+        stmt.setString(1, produto.obterNome());
+        stmt.setFloat(2, produto.obterPreco());
+        stmt.setInt(3, produto.obterEstoque());
+    }
+    
+    private Produto retornarProduto(ResultSet rs) throws SQLException{
+        Produto produto = new Produto();
+        produto.atualizarCodigo(rs.getInt("CODIGO_PRODUTO"));
+        produto.atualizarNome(rs.getString("NOME"));
+        produto.atualizarPreco(rs.getFloat("PRECO"));
+        produto.atualizarEstoque(rs.getInt("ESTOQUE"));
+        return produto;
+    }
+    
     public Produto inserirProduto(Produto produto) {
         Connection conexao = SingletonConexao.getInstance().obterConexao();
         PreparedStatement stmt = null;
@@ -29,10 +73,7 @@ public class ProdutoBD {
                        + "               values(?, ?, ?);";
                
                stmt = conexao.prepareStatement(sql);
-               
-               stmt.setString(1, produto.obterNome());
-               stmt.setFloat(2, produto.obterPreco());
-               stmt.setInt(3, produto.obterEstoque());
+               prepararComandoAtualizacao(stmt, produto);
                
                stmt.execute();
                
@@ -60,10 +101,7 @@ public class ProdutoBD {
                        + "   where CODIGO_PRODUTO="+produto.obterCodigo()+";";
                
                stmt = conexao.prepareStatement(sql);
-               
-               stmt.setString(1, produto.obterNome());
-               stmt.setFloat(2, produto.obterPreco());
-               stmt.setInt(3, produto.obterEstoque());
+               prepararComandoAtualizacao(stmt, produto);
                
                stmt.execute();
                
@@ -116,13 +154,7 @@ public class ProdutoBD {
                 rs = stmt.executeQuery();
                 
                 while (rs.next()) {
-                    Produto produto = new Produto();
-                    produto.atualizarCodigo(rs.getInt("CODIGO_PRODUTO"));
-                    produto.atualizarNome(rs.getString("NOME"));
-                    produto.atualizarPreco(rs.getFloat("PRECO"));
-                    produto.atualizarEstoque(rs.getInt("ESTOQUE"));
-                    
-                    produtos.add(produto);
+                    produtos.add(retornarProduto(rs));
                 }
                 
                 conexao.commit();
@@ -140,29 +172,41 @@ public class ProdutoBD {
         return null;
     }
     
-    private void obterUltimoCodigo() {
+    public ArrayList <Produto> buscarProdutosPorEspecificacao(String coluna, String dado) {
+        ArrayList <Produto> produtos = new ArrayList <Produto>();
         Connection conexao = SingletonConexao.getInstance().obterConexao();
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        try {
-            String sql = "select CODIGO_PRODUTO from produto "
-                    + "   where CODIGO_PRODUTO = (select max(CODIGO_PRODUTO) from produto);";
-            
-            stmt = conexao.prepareStatement(sql);
-            rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                codigo = rs.getInt("CODIGO_PRODUTO");
-            }
-            
-            conexao.commit();
-            
-        } catch (SQLException e) {
+        if (conexao != null) {
+            try {
+                String sql;
+                if (coluna.equals("CODIGO_PRODUTO")) {
+                    sql = "select * from produto where "+coluna+" = "+Integer.parseInt(dado)+";"; 
+                } else {
+                    sql = "select * from produto where "+coluna+" like '%"+dado+"%';";
+                }
+                
+                stmt = conexao.prepareStatement(sql);
+                rs = stmt.executeQuery();
+                
+                while (rs.next()) {
+                    produtos.add(retornarProduto(rs));
+                }
+                
+                conexao.commit();
+                
+            } catch (SQLException e) {
                 try {
                     conexao.rollback();
                 } catch (SQLException ex) { }
-        } finally {
-            SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
+            } finally {
+                SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
+            }
+        }
+        if (produtos.size() > 0) {
+            return produtos;
+        } else {
+            return null;
         }
     }
     

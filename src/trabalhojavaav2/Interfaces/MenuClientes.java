@@ -33,8 +33,21 @@ public class MenuClientes extends javax.swing.JDialog {
     
     private void atualizarModelo() {
         try {
+            limparModelo();
             ArrayList <Cliente> clientes = new ArrayList<Cliente>() ;
             clientes = clienteBD.lerClientes();
+            for (int i = 0; i < clientes.size(); i++) {
+                Cliente cliente = clientes.get(i);
+                modeloCliente.incluirCliente(cliente);
+            }
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    private void atualizarModelo(ArrayList <Cliente> clientes) {
+        try {
+            limparModelo();
             for (int i = 0; i < clientes.size(); i++) {
                 Cliente cliente = clientes.get(i);
                 modeloCliente.incluirCliente(cliente);
@@ -48,6 +61,32 @@ public class MenuClientes extends javax.swing.JDialog {
         modeloConsulta.addElement("Codigo");
         modeloConsulta.addElement("Nome");
         modeloConsulta.addElement("CPF");
+    }
+    
+    private ArrayList <Cliente> consultarClientes() {
+        ArrayList <Cliente> clientes = new ArrayList <Cliente>();
+        String opcao = cbConsultaCli.getItemAt(cbConsultaCli.getSelectedIndex()).toUpperCase();
+        String dado = textBuscarCli.getText().toUpperCase();
+        if (!dado.equals("")) {
+            if (opcao.equals("CODIGO")) {
+                opcao = "CODIGO_CLIENTE";
+            }
+            clientes = clienteBD.buscarClientesPorEspecificacao(opcao, dado);
+            if (clientes != null) {
+                return clientes;
+            } else {
+                JOptionPane.showMessageDialog(this, "Cliente nao encontrado!");
+            }
+        } else {
+            atualizarModelo();
+        }
+        return null;
+    }
+    
+    private void limparModelo() {
+        for (int i = modeloCliente.getRowCount()-1; i >= 0; i--) {
+            modeloCliente.excluirCliente(i);
+        }
     }
 
     /**
@@ -69,7 +108,7 @@ public class MenuClientes extends javax.swing.JDialog {
         buSelecionarCli = new javax.swing.JButton();
         buVoltarCli = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        botaoConsultarCli = new javax.swing.JButton();
+        buConsultarCli = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         textBuscarCli = new javax.swing.JTextField();
         cbConsultaCli = new javax.swing.JComboBox<>();
@@ -127,7 +166,12 @@ public class MenuClientes extends javax.swing.JDialog {
 
         jLabel1.setText("Consulta Por:");
 
-        botaoConsultarCli.setText("Consultar");
+        buConsultarCli.setText("Consultar");
+        buConsultarCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buConsultarCliActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Buscar:");
 
@@ -146,12 +190,12 @@ public class MenuClientes extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbConsultaCli, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
+                        .addGap(20, 20, 20)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(textBuscarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(botaoConsultarCli)
+                        .addGap(48, 48, 48)
+                        .addComponent(buConsultarCli)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -179,19 +223,14 @@ public class MenuClientes extends javax.swing.JDialog {
                 .addComponent(buVoltarCli)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(botaoConsultarCli)
-                            .addComponent(jLabel2)
-                            .addComponent(cbConsultaCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                        .addContainerGap(16, Short.MAX_VALUE)
-                        .addComponent(textBuscarCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(buConsultarCli)
+                    .addComponent(jLabel2)
+                    .addComponent(cbConsultaCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textBuscarCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -255,6 +294,14 @@ public class MenuClientes extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_buSelecionarCliActionPerformed
 
+    private void buConsultarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buConsultarCliActionPerformed
+        ArrayList <Cliente> clientes = new ArrayList<Cliente>();
+        clientes = consultarClientes();
+        if (clientes != null) {
+            atualizarModelo(clientes);
+        }
+    }//GEN-LAST:event_buConsultarCliActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -298,8 +345,8 @@ public class MenuClientes extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoConsultarCli;
     private javax.swing.JButton buAlterarCli;
+    private javax.swing.JButton buConsultarCli;
     private javax.swing.JButton buExcluirCli;
     private javax.swing.JButton buInserirCli;
     private javax.swing.JButton buSelecionarCli;

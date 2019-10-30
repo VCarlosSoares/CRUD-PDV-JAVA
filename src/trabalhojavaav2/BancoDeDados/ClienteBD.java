@@ -20,6 +20,35 @@ public class ClienteBD {
         obterUltimoCodigo();
     }
     
+    private void obterUltimoCodigo() {
+        Connection conexao = SingletonConexao.getInstance().obterConexao();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        if (conexao != null) {
+            try {
+                String sql = "select CODIGO_CLIENTE from cliente "
+                        + "   where CODIGO_CLIENTE = (select max(CODIGO_CLIENTE) from cliente);";
+
+                stmt = conexao.prepareStatement(sql);
+                rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    codigo = rs.getInt("CODIGO_CLIENTE");
+                }
+            
+                conexao.commit();
+            
+            } catch (SQLException e) {
+                try {
+                    conexao.rollback();
+                } catch (SQLException ex) { }
+            } finally {
+                SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
+            }
+        }
+    }
+    
+    
     private void prepararComandoAtualizacao(PreparedStatement stmt, Cliente cliente) throws SQLException{
         stmt.setString(1, cliente.obterNome());
         stmt.setString(2, cliente.obterCpf());
@@ -30,6 +59,21 @@ public class ClienteBD {
         stmt.setString(7, cliente.obterComplemento());
         stmt.setString(8, cliente.obterTelefone());
         stmt.setString(9, cliente.obterEmail());
+    }
+    
+    private Cliente retornarCliente(ResultSet rs) throws SQLException{
+        Cliente cliente = new Cliente();
+        cliente.atualizarCodigo(rs.getInt("CODIGO_CLIENTE"));
+        cliente.atualizarNome(rs.getString("NOME"));
+        cliente.atualizarCpf(rs.getString("CPF"));
+        cliente.atualizarEstado(rs.getString("ESTADO"));
+        cliente.atualizarCidade(rs.getString("CIDADE"));
+        cliente.atualizarBairro(rs.getString("BAIRRO"));
+        cliente.atualizarRua(rs.getString("RUA"));
+        cliente.atualizarComplemento(rs.getString("COMPLEMENTO"));
+        cliente.atualizarTelefone(rs.getString("TELEFONE"));
+        cliente.atualizarEmail(rs.getString("EMAIL"));
+        return cliente;
     }
 
     public Cliente inserirCliente(Cliente cliente) {
@@ -63,21 +107,6 @@ public class ClienteBD {
         return cliente;
     }
     
-    private Cliente retornarCliente(ResultSet rs) throws SQLException{
-        Cliente cliente = new Cliente();
-        cliente.atualizarCodigo(rs.getInt("CODIGO_CLIENTE"));
-        cliente.atualizarNome(rs.getString("NOME"));
-        cliente.atualizarCpf(rs.getString("CPF"));
-        cliente.atualizarEstado(rs.getString("ESTADO"));
-        cliente.atualizarCidade(rs.getString("CIDADE"));
-        cliente.atualizarBairro(rs.getString("BAIRRO"));
-        cliente.atualizarRua(rs.getString("RUA"));
-        cliente.atualizarComplemento(rs.getString("COMPLEMENTO"));
-        cliente.atualizarTelefone(rs.getString("TELEFONE"));
-        cliente.atualizarEmail(rs.getString("EMAIL"));
-        return cliente;
-    }
-    
     public void alterarCliente(Cliente cliente) {
         Connection conexao = SingletonConexao.getInstance().obterConexao();
         PreparedStatement stmt = null;
@@ -88,7 +117,6 @@ public class ClienteBD {
                        + "   where CODIGO_CLIENTE="+cliente.obterCodigo()+";";
                
                stmt = conexao.prepareStatement(sql);
-               
                prepararComandoAtualizacao(stmt, cliente);
                
                stmt.execute();
@@ -158,37 +186,8 @@ public class ClienteBD {
         return clientes;
     }
     
-    private void obterUltimoCodigo() {
-        Connection conexao = SingletonConexao.getInstance().obterConexao();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        if (conexao != null) {
-            try {
-                String sql = "select CODIGO_CLIENTE from cliente "
-                        + "   where CODIGO_CLIENTE = (select max(CODIGO_CLIENTE) from cliente);";
-
-                stmt = conexao.prepareStatement(sql);
-                rs = stmt.executeQuery();
-
-                while (rs.next()) {
-                    codigo = rs.getInt("CODIGO_CLIENTE");
-                }
-            
-                conexao.commit();
-            
-            } catch (SQLException e) {
-                try {
-                    conexao.rollback();
-                } catch (SQLException ex) { }
-            } finally {
-                SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
-            }
-        }
-    }
-    
-    public ArrayList <Cliente> buscarDadosCliente(String coluna, String dado) {
+    public ArrayList <Cliente> buscarClientesPorEspecificacao(String coluna, String dado) {
         ArrayList <Cliente> clientes = new ArrayList <Cliente>();
-        coluna.toUpperCase();
         Connection conexao = SingletonConexao.getInstance().obterConexao();
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -196,9 +195,9 @@ public class ClienteBD {
             try {
                 String sql;
                 if (coluna.equals("CODIGO_CLIENTE")) {
-                    sql = "select * from cliente where "+coluna+" = "+dado+";"; 
+                    sql = "select * from cliente where "+coluna+" = "+Integer.parseInt(dado)+";"; 
                 } else {
-                    sql = "select * from cliente where "+coluna+" like %"+dado+"%;";
+                    sql = "select * from cliente where "+coluna+" like '%"+dado+"%';";
                 }
                 
                 stmt = conexao.prepareStatement(sql);
@@ -218,7 +217,11 @@ public class ClienteBD {
                 SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
             }
         }
-        return clientes;
+        if (clientes.size() > 0) {
+            return clientes;
+        } else {
+            return null;
+        }
     }
     
     /*
