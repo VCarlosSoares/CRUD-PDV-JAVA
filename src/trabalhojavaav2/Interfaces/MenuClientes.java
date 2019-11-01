@@ -164,9 +164,9 @@ public class MenuClientes extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("Consulta Por:");
+        jLabel1.setText("Buscar Por:");
 
-        buConsultarCli.setText("Consultar");
+        buConsultarCli.setText("Buscar");
         buConsultarCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buConsultarCliActionPerformed(evt);

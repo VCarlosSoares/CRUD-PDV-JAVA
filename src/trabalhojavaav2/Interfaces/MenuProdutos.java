@@ -167,7 +167,7 @@ public class MenuProdutos extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("Consulta Por:");
+        jLabel1.setText("Buscar Por:");
 
         jLabel2.setText("Buscar:");
 

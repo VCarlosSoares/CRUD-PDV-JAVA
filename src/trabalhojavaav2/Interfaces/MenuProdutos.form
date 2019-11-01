@@ -176,7 +176,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Consulta Por:"/>
+            <Property name="text" type="java.lang.String" value="Buscar Por:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cbConsultaProd">

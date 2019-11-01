@@ -1,0 +1,12 @@
+Item Venda:
+	Codigo Produto
+	Nome Produto
+	Quantidade
+	Preco Unit
+
+Venda:
+	Codigo
+	Data
+	Nome Cliente
+	Preco Total da Venda
+	Forma Pagamento
