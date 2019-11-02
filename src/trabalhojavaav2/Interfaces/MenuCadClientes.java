@@ -37,6 +37,9 @@ public class MenuCadClientes extends javax.swing.JDialog {
             textComplementoCli.setText(cliente.obterComplemento());
             textTelefoneCli.setText(cliente.obterTelefone());
             textEmailCli.setText(cliente.obterEmail());
+        } else {
+            textEstadoCli.setText("RJ");
+            textCidadeCli.setText("PETROPOLIS");
         }
         buCancelarCli.setEnabled(operacaoCadastro != operacaoCadastro.ocConsultar);
         textCodigoCli.setEnabled(false);
@@ -98,15 +101,15 @@ public class MenuCadClientes extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro Cliente", 0, 0, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(102, 102, 102))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(102, 102, 102))); // NOI18N
 
         jLabel2.setText("Nome:");
 
         jLabel3.setText("CPF:");
 
-        jLabel5.setText("Telefone:");
+        jLabel5.setText("*Telefone:");
 
-        jLabel6.setText("Email:");
+        jLabel6.setText("*Email:");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -124,13 +127,13 @@ public class MenuCadClientes extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setText("Estado:");
+        jLabel7.setText("*Estado:");
 
-        jLabel8.setText("Cidade:");
+        jLabel8.setText("*Cidade:");
 
-        jLabel9.setText("Bairro:");
+        jLabel9.setText("*Bairro:");
 
-        jLabel10.setText("Rua:");
+        jLabel10.setText("*Rua:");
 
         jLabel11.setText("*Comple.:");
 
@@ -270,43 +273,21 @@ public class MenuCadClientes extends javax.swing.JDialog {
                     camposInvalidos[index++] = "CPF";
                     valido = false;
                 }
-                if (!textEstadoCli.getText().equals("") && textEstadoCli.getText().length() == 2) {
-                    cliente.atualizarEstado(textEstadoCli.getText().toUpperCase());
-                } else {
-                    camposInvalidos[index++] = "Estado";
-                    valido = false;
+                if (!textEstadoCli.getText().equals("")) {
+                    if (textEstadoCli.getText().length() == 2) {
+                        cliente.atualizarEstado(textEstadoCli.getText().toUpperCase());
+                    } else {
+                        camposInvalidos[index++] = "Estado";
+                        valido = false;
+                    }
                 }
-                if (!textCidadeCli.getText().equals("")) {
-                    cliente.atualizarCidade(textCidadeCli.getText().toUpperCase());
-                } else {
-                    camposInvalidos[index++] = "Cidade";
-                    valido = false;
-                }
-                if (!textBairroCli.getText().equals("")) {
-                    cliente.atualizarBairro(textBairroCli.getText().toUpperCase());
-                } else {
-                    camposInvalidos[index++] = "Bairro";
-                    valido = false;
-                }
-                if (!textRuaCli.getText().equals("")) {
-                    cliente.atualizarRua(textRuaCli.getText().toUpperCase());
-                } else {
-                    camposInvalidos[index++] = "Rua";
-                    valido = false;
-                }
+                
+                cliente.atualizarCidade(textCidadeCli.getText().toUpperCase());
+                cliente.atualizarBairro(textBairroCli.getText().toUpperCase());
+                cliente.atualizarRua(textRuaCli.getText().toUpperCase());
                 cliente.atualizarComplemento(textComplementoCli.getText().toUpperCase());
-                if (!textTelefoneCli.getText().equals("")) {
-                    cliente.atualizarTelefone(textTelefoneCli.getText().toUpperCase());
-                } else {
-                    camposInvalidos[index++] = "Telefone";
-                    valido = false;
-                }
-                if (!textEmailCli.getText().equals("")) {
-                    cliente.atualizarEmail(textEmailCli.getText().toUpperCase());
-                } else {
-                    camposInvalidos[index++] = "Email";
-                    valido = false;
-                }
+                cliente.atualizarTelefone(textTelefoneCli.getText().toUpperCase());
+                cliente.atualizarEmail(textEmailCli.getText().toUpperCase());
                 
                 if (valido) {
                     confirmado = true;
