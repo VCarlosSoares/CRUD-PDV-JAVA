@@ -54,7 +54,7 @@ public class SingletonConexao {
             Class.forName("com.mysql.jdbc.Driver");
         
             Connection conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_mercadinho", 
-                                                             "root", "123456");
+                                                             "vitorcarlos", "123456789");
             
             conexao.setAutoCommit(false);
             return conexao;

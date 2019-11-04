@@ -18,6 +18,8 @@ public class MenuClientes extends javax.swing.JDialog {
     private ModeloTabelaCliente modeloCliente;
     private DefaultComboBoxModel modeloConsulta;
     
+    private boolean confirmado;
+    private Cliente cli;
     
     public MenuClientes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -29,6 +31,31 @@ public class MenuClientes extends javax.swing.JDialog {
         cbConsultaCli.setModel(modeloConsulta);
         atualizarModelo();
         preencherModeloConsulta();
+        
+        buSelecionarCli.setEnabled(false);
+    }
+    
+    public MenuClientes(java.awt.Frame parent, OperacaoCadastro operacao, Cliente cli) {
+        super(parent, true);
+        initComponents();
+        clienteBD = new ClienteBD();
+        modeloCliente = new ModeloTabelaCliente(new ArrayList<Cliente>());
+        modeloConsulta = new DefaultComboBoxModel();
+        tabClientes.setModel(modeloCliente);
+        cbConsultaCli.setModel(modeloConsulta);
+        atualizarModelo();
+        preencherModeloConsulta();
+        
+        this.cli = cli;
+        confirmado = false;
+        
+        if (operacao == OperacaoCadastro.ocSelecionar) {
+            buInserirCli.setEnabled(false);
+            buAlterarCli.setEnabled(false);
+            buExcluirCli.setEnabled(false);
+        } else {
+            buSelecionarCli.setEnabled(false);
+        }
     }
     
     private void atualizarModelo() {
@@ -88,6 +115,17 @@ public class MenuClientes extends javax.swing.JDialog {
             modeloCliente.excluirCliente(i);
         }
     }
+    
+    public boolean operacaoConfirmada() {
+        return confirmado;
+    }
+    
+    public static boolean executar(java.awt.Frame parent, OperacaoCadastro operacaoCadastro, Cliente cli) {
+        MenuClientes menuClientes= new MenuClientes(parent, operacaoCadastro, cli);
+        menuClientes.setLocationRelativeTo(null);
+        menuClientes.setVisible(true);
+        return menuClientes.operacaoConfirmada();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -105,13 +143,14 @@ public class MenuClientes extends javax.swing.JDialog {
         buInserirCli = new javax.swing.JButton();
         buAlterarCli = new javax.swing.JButton();
         buExcluirCli = new javax.swing.JButton();
-        buSelecionarCli = new javax.swing.JButton();
+        buConsultarCli = new javax.swing.JButton();
         buVoltarCli = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        buConsultarCli = new javax.swing.JButton();
+        buBuscarCli = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         textBuscarCli = new javax.swing.JTextField();
         cbConsultaCli = new javax.swing.JComboBox<>();
+        buSelecionarCli = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -150,10 +189,10 @@ public class MenuClientes extends javax.swing.JDialog {
             }
         });
 
-        buSelecionarCli.setText("Consultar");
-        buSelecionarCli.addActionListener(new java.awt.event.ActionListener() {
+        buConsultarCli.setText("Consultar");
+        buConsultarCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buSelecionarCliActionPerformed(evt);
+                buConsultarCliActionPerformed(evt);
             }
         });
 
@@ -166,14 +205,21 @@ public class MenuClientes extends javax.swing.JDialog {
 
         jLabel1.setText("Buscar Por:");
 
-        buConsultarCli.setText("Buscar");
-        buConsultarCli.addActionListener(new java.awt.event.ActionListener() {
+        buBuscarCli.setText("Buscar");
+        buBuscarCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buConsultarCliActionPerformed(evt);
+                buBuscarCliActionPerformed(evt);
             }
         });
 
         jLabel2.setText("Buscar:");
+
+        buSelecionarCli.setText("Selecionar");
+        buSelecionarCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buSelecionarCliActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -181,10 +227,6 @@ public class MenuClientes extends javax.swing.JDialog {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 816, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(jLabel1)
@@ -195,38 +237,44 @@ public class MenuClientes extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(textBuscarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(48, 48, 48)
-                        .addComponent(buConsultarCli)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(buBuscarCli))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 808, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buAlterarCli, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buExcluirCli, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buVoltarCli, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buSelecionarCli, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buInserirCli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(6, 6, 6))
+                    .addComponent(buInserirCli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buConsultarCli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buExcluirCli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buSelecionarCli, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(buVoltarCli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator7)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(28, 28, 28)
                 .addComponent(buInserirCli)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buAlterarCli)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buExcluirCli)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buConsultarCli)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buSelecionarCli)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buVoltarCli)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(buConsultarCli)
+                    .addComponent(buBuscarCli)
                     .addComponent(jLabel2)
                     .addComponent(cbConsultaCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textBuscarCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -240,8 +288,8 @@ public class MenuClientes extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 2, Short.MAX_VALUE))
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,9 +314,13 @@ public class MenuClientes extends javax.swing.JDialog {
         int indice = tabClientes.getSelectedRow();
         if (indice >= 0) {
             Cliente cliente = modeloCliente.obterCliente(indice);
-            if (MenuCadClientes.executar(null, OperacaoCadastro.ocAlterar, cliente)) {
-                clienteBD.alterarCliente(cliente);
-                modeloCliente.atualizarCliente(indice, cliente);
+            if (cliente.obterCodigo() == 1) {
+                JOptionPane.showMessageDialog(this, "Não é possível alterar esse cliente!");
+            } else {
+                if (MenuCadClientes.executar(null, OperacaoCadastro.ocAlterar, cliente)) {
+                    clienteBD.alterarCliente(cliente);
+                    modeloCliente.atualizarCliente(indice, cliente);
+                }
             }
         }
     }//GEN-LAST:event_buAlterarCliActionPerformed
@@ -277,30 +329,55 @@ public class MenuClientes extends javax.swing.JDialog {
         int indice = tabClientes.getSelectedRow();
         if (indice >= 0) {
             Cliente cliente = modeloCliente.obterCliente(indice);
-            int opcao = JOptionPane.showConfirmDialog(this, "Confirmar Exclusao de:  "+cliente.obterNome(), "Exclusao", 
+            if (cliente.obterCodigo() == 1) {
+                JOptionPane.showMessageDialog(this, "Não é possível excluir esse cliente!");
+            } else {
+                int opcao = JOptionPane.showConfirmDialog(this, "Confirmar Exclusao de:  "+cliente.obterNome(), "Exclusao", 
                                                       JOptionPane.YES_NO_OPTION);
-            if (opcao == 0) {
-                clienteBD.excluirCliente(cliente);
-                modeloCliente.excluirCliente(indice);
+                if (opcao == 0) {
+                    clienteBD.excluirCliente(cliente);
+                    modeloCliente.excluirCliente(indice);
+                }
             }
         }
     }//GEN-LAST:event_buExcluirCliActionPerformed
 
-    private void buSelecionarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buSelecionarCliActionPerformed
+    private void buConsultarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buConsultarCliActionPerformed
         int indice = tabClientes.getSelectedRow();
         if (indice >= 0) {
             Cliente cliente = modeloCliente.obterCliente(indice);
+            System.out.println(cliente.obterNome());
             MenuCadClientes.executar(null, OperacaoCadastro.ocConsultar, cliente);
         }
-    }//GEN-LAST:event_buSelecionarCliActionPerformed
+    }//GEN-LAST:event_buConsultarCliActionPerformed
 
-    private void buConsultarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buConsultarCliActionPerformed
+    private void buBuscarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buBuscarCliActionPerformed
         ArrayList <Cliente> clientes = new ArrayList<Cliente>();
         clientes = consultarClientes();
         if (clientes != null) {
             atualizarModelo(clientes);
         }
-    }//GEN-LAST:event_buConsultarCliActionPerformed
+    }//GEN-LAST:event_buBuscarCliActionPerformed
+
+    private void buSelecionarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buSelecionarCliActionPerformed
+        int indice = tabClientes.getSelectedRow();
+        if (indice >= 0) {
+            Cliente cliente = modeloCliente.obterCliente(indice);
+            cli.atualizarCodigo(cliente.obterCodigo());
+            cli.atualizarNome(cliente.obterNome());
+            cli.atualizarCpf(cliente.obterCpf());
+            cli.atualizarEstado(cliente.obterEstado());
+            cli.atualizarCidade(cliente.obterEmail());
+            cli.atualizarBairro(cliente.obterBairro());
+            cli.atualizarRua(cliente.obterRua());
+            cli.atualizarComplemento(cliente.obterComplemento());
+            cli.atualizarTelefone(cliente.obterTelefone());
+            cli.atualizarEmail(cliente.obterEmail());
+            
+            confirmado=true;
+            dispose();
+        }
+    }//GEN-LAST:event_buSelecionarCliActionPerformed
 
     /**
      * @param args the command line arguments
@@ -346,6 +423,7 @@ public class MenuClientes extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buAlterarCli;
+    private javax.swing.JButton buBuscarCli;
     private javax.swing.JButton buConsultarCli;
     private javax.swing.JButton buExcluirCli;
     private javax.swing.JButton buInserirCli;

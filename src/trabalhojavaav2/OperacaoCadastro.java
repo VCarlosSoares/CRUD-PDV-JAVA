@@ -7,5 +7,6 @@ package trabalhojavaav2;
 public enum OperacaoCadastro {
     ocIncluir,
     ocAlterar,
-    ocConsultar
+    ocConsultar,
+    ocSelecionar
 }

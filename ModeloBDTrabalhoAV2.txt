@@ -4,15 +4,18 @@ use java_mercadinho;
 create table cliente(CODIGO_CLIENTE int primary key auto_increment, 
 		     NOME VARCHAR(50) not null, 
 		     CPF char(15) not null unique, 
-		     ESTADO CHAR(2) not null, 
-		     CIDADE VARCHAR(50) not null, 
-		     BAIRRO VARCHAR(50) not null, 
-		     RUA VARCHAR(30) not null, 
+		     ESTADO CHAR(2), 
+		     CIDADE VARCHAR(50), 
+		     BAIRRO VARCHAR(50), 
+		     RUA VARCHAR(30), 
 		     COMPLEMENTO VARCHAR(50), 
-	 	     TELEFONE VARCHAR(20) not null unique, 
-		     EMAIL VARCHAR(50) not null);
+	 	     TELEFONE VARCHAR(20), 
+		     EMAIL VARCHAR(50));
 
-create table forma_pagamento(CODIGO_FORMA_PAG int primary key auto_increment, 
+insert into cliente (NOME, CPF) 
+             values ("NAO IDENTIFICADO", "000.000.000-00");
+
+create table forma_pagamento(CODIGO_FORMA_PAG int primary key auto_increment,
 			     NOME VARCHAR(30) not null);
 
 create table item_venda(CODIGO_VENDA int, 

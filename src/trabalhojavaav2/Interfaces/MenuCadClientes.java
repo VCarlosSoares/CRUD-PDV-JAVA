@@ -9,7 +9,7 @@ import trabalhojavaav2.OperacaoCadastro;
  * @author vitor
  */
 public class MenuCadClientes extends javax.swing.JDialog {
-
+    
     private OperacaoCadastro operacaoCadastro;
     private Cliente cliente;
     private boolean confirmado;
@@ -58,6 +58,7 @@ public class MenuCadClientes extends javax.swing.JDialog {
         return confirmado;
     }
     
+    
     public static boolean executar(java.awt.Frame parent, OperacaoCadastro operacaoCadastro, Cliente cliente) {
         MenuCadClientes menuCadClientes = new MenuCadClientes(parent, operacaoCadastro, cliente);
         menuCadClientes.setLocationRelativeTo(null);
@@ -101,13 +102,13 @@ public class MenuCadClientes extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(102, 102, 102))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(102, 102, 102))); // NOI18N
 
-        jLabel2.setText("Nome:");
+        jLabel2.setText("*Nome:");
 
-        jLabel3.setText("CPF:");
+        jLabel3.setText("*CPF:");
 
-        jLabel5.setText("*Telefone:");
+        jLabel5.setText("Telefone:");
 
         jLabel6.setText("*Email:");
 
@@ -127,15 +128,15 @@ public class MenuCadClientes extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setText("*Estado:");
+        jLabel7.setText("Estado:");
 
-        jLabel8.setText("*Cidade:");
+        jLabel8.setText("Cidade:");
 
-        jLabel9.setText("*Bairro:");
+        jLabel9.setText("Bairro:");
 
-        jLabel10.setText("*Rua:");
+        jLabel10.setText("Rua:");
 
-        jLabel11.setText("*Comple.:");
+        jLabel11.setText("Comple.:");
 
         jLabel1.setText("Código:");
 
@@ -156,7 +157,7 @@ public class MenuCadClientes extends javax.swing.JDialog {
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(textComplementoCli, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
