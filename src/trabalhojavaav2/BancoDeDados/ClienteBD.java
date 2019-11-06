@@ -83,7 +83,7 @@ public class ClienteBD {
            try {
                String sql = "insert into cliente(NOME, CPF, ESTADO, CIDADE, BAIRRO, RUA, "
                        + "                       COMPLEMENTO, TELEFONE, EMAIL) "
-                       + "               values(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                       + "                values(?, ?, ?, ?, ?, ?, ?, ?, ?);";
                
                stmt = conexao.prepareStatement(sql);
                prepararComandoAtualizacao(stmt, cliente);

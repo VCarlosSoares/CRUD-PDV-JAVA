@@ -11,8 +11,10 @@ public class Venda {
     private int codigo;
     private Date data;
     private int codigoCliente;
+    private String nomeCliente;
     private float precoTotal;
     private int codigoFormaPag;
+    private String nomeFormaPag;
 
     public int obterCodigo() {
         return codigo;
@@ -37,6 +39,14 @@ public class Venda {
     public void atualizarCodigoCliente(int codigoCliente) {
         this.codigoCliente = codigoCliente;
     }
+    
+    public String obterNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void atualizarNomeCliente (String nomeCliente) {
+        this.nomeCliente=nomeCliente;
+    }
 
     public float obterPrecoTotal() {
         return precoTotal;
@@ -54,4 +64,11 @@ public class Venda {
         this.codigoFormaPag = codigoFormaPag;
     }
     
+    public String obterNomeFormaPagamento() {
+        return nomeFormaPag;
+    }
+
+    public void atualizarNomeFormaPagamento (String nomeFormaPag) {
+        this.nomeFormaPag = nomeFormaPag;
+    }
 }

@@ -15,22 +15,6 @@ public class SingletonConexao {
     
     private static SingletonConexao INSTANCE = null;
     
-    /*
-    private void inicializar() {
-               try {
-            Class.forName("com.mysql.jdbc.Driver");
-        
-            conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_mercadinho", 
-                                                "root", "123456");
-            
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, "Erro de conexao: "+e);
-        }
-
-    } 
-    */
-    
     public static SingletonConexao getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SingletonConexao();
@@ -39,22 +23,12 @@ public class SingletonConexao {
         return INSTANCE;
     }
     
-    /*
-    public PreparedStatement obterSTMT(String sql) {
-        try {
-            return conexao.prepareStatement(sql);
-        } catch (SQLException ex) {
-            Logger.getLogger(SingletonConexao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    */
-    
     public Connection obterConexao()  {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         
             Connection conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_mercadinho", 
-                                                             "vitorcarlos", "123456789");
+                                                             "root", "123456");
             
             conexao.setAutoCommit(false);
             return conexao;
@@ -102,5 +76,29 @@ public class SingletonConexao {
             JOptionPane.showMessageDialog(null, "Erro ao fechar conexao: "+e);
         }
     }
+    
+    /*
+    private void inicializar() {
+               try {
+            Class.forName("com.mysql.jdbc.Driver");
+        
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_mercadinho", 
+                                                "root", "123456");
+            
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro de conexao: "+e);
+        }
+
+    } 
+    
+    public PreparedStatement obterSTMT(String sql) {
+        try {
+            return conexao.prepareStatement(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(SingletonConexao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    */
 }
 

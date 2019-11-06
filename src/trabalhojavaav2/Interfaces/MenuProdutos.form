@@ -69,14 +69,15 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" pref="11" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="buConsultarProd" alignment="1" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="buExcluirProd" alignment="1" max="32767" attributes="0"/>
-                      <Component id="buVoltarProd" alignment="1" max="32767" attributes="0"/>
                       <Component id="buAlterarProd" alignment="1" max="32767" attributes="0"/>
-                      <Component id="buCadastrarProd" alignment="1" min="-2" pref="79" max="-2" attributes="0"/>
+                      <Component id="buSelecionarProd" alignment="1" max="32767" attributes="0"/>
+                      <Component id="buVoltarProd" alignment="0" max="32767" attributes="0"/>
+                      <Component id="buConsultarProd" alignment="0" max="32767" attributes="0"/>
+                      <Component id="buInserirProd" alignment="1" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -98,16 +99,18 @@
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                  <Component id="buCadastrarProd" min="-2" max="-2" attributes="0"/>
+                  <Component id="buInserirProd" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="buAlterarProd" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="buExcluirProd" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="buConsultarProd" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="buSelecionarProd" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="buVoltarProd" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -134,12 +137,12 @@
             <Property name="orientation" type="int" value="1"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="buCadastrarProd">
+        <Component class="javax.swing.JButton" name="buInserirProd">
           <Properties>
             <Property name="text" type="java.lang.String" value="Inserir"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buCadastrarProdActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buInserirProdActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="buAlterarProd">
@@ -198,6 +201,14 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="textBuscarProd">
+        </Component>
+        <Component class="javax.swing.JButton" name="buSelecionarProd">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Selecionar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buSelecionarProdActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

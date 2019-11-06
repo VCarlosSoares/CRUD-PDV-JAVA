@@ -7,6 +7,7 @@ package trabalhojavaav2.Classes;
 public class ItemVenda {
     private int codigoVenda;
     private int codigoProduto;
+    private String nomeProduto;
     private int quantidade;
     private float precoUnit;
     private float precoTotal;
@@ -25,6 +26,14 @@ public class ItemVenda {
 
     public void atualizarCodigoProduto(int codigoProduto) {
         this.codigoProduto = codigoProduto;
+    }
+    
+    public String obterNomeProduto() {
+        return nomeProduto;
+    }
+
+    public void atualizarNomeProduto(String nomeProduto) {
+        this.nomeProduto = nomeProduto;
     }
 
     public int obterQuantidade() {

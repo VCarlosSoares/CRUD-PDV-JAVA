@@ -23,6 +23,9 @@ public class MenuProdutos extends javax.swing.JDialog {
     private ModeloTabelaProduto modeloProduto;
     private DefaultComboBoxModel modeloConsulta;
     
+    private boolean confirmado;
+    private Produto prod;
+    
     public MenuProdutos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -33,6 +36,31 @@ public class MenuProdutos extends javax.swing.JDialog {
         cbConsultaProd.setModel(modeloConsulta);
         atualizarModelo();
         preencherModeloConsulta();
+        
+        buSelecionarProd.setEnabled(false);
+    }
+    
+    public MenuProdutos(java.awt.Frame parent, OperacaoCadastro operacao, Produto prod) {
+        super(parent, true);
+        initComponents();
+        produtoBD = new ProdutoBD();
+        modeloProduto = new ModeloTabelaProduto(new ArrayList<Produto>());
+        modeloConsulta = new DefaultComboBoxModel();
+        tabProdutos.setModel(modeloProduto);
+        cbConsultaProd.setModel(modeloConsulta);
+        atualizarModelo();
+        preencherModeloConsulta();
+        
+        this.prod = prod;
+        confirmado = false;
+        
+        if (operacao == OperacaoCadastro.ocSelecionar) {
+            buInserirProd.setEnabled(false);
+            buAlterarProd.setEnabled(false);
+            buExcluirProd.setEnabled(false);
+        } else {
+            buSelecionarProd.setEnabled(false);
+        }
     }
     
     private void atualizarModelo() {
@@ -91,6 +119,17 @@ public class MenuProdutos extends javax.swing.JDialog {
             modeloProduto.excluirProduto(i);
         }
     }
+    
+    public boolean operacaoConfirmada() {
+        return confirmado;
+    }
+    
+    public static boolean executar(java.awt.Frame parent, OperacaoCadastro operacaoCadastro, Produto prod) {
+        MenuProdutos menuProdutos = new MenuProdutos(parent, operacaoCadastro, prod);
+        menuProdutos.setLocationRelativeTo(null);
+        menuProdutos.setVisible(true);
+        return menuProdutos.operacaoConfirmada();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -105,7 +144,7 @@ public class MenuProdutos extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabProdutos = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
-        buCadastrarProd = new javax.swing.JButton();
+        buInserirProd = new javax.swing.JButton();
         buAlterarProd = new javax.swing.JButton();
         buExcluirProd = new javax.swing.JButton();
         buConsultarProd = new javax.swing.JButton();
@@ -115,6 +154,7 @@ public class MenuProdutos extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         buBuscarProd = new javax.swing.JButton();
         textBuscarProd = new javax.swing.JTextField();
+        buSelecionarProd = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -132,10 +172,10 @@ public class MenuProdutos extends javax.swing.JDialog {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        buCadastrarProd.setText("Inserir");
-        buCadastrarProd.addActionListener(new java.awt.event.ActionListener() {
+        buInserirProd.setText("Inserir");
+        buInserirProd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buCadastrarProdActionPerformed(evt);
+                buInserirProdActionPerformed(evt);
             }
         });
 
@@ -178,6 +218,13 @@ public class MenuProdutos extends javax.swing.JDialog {
             }
         });
 
+        buSelecionarProd.setText("Selecionar");
+        buSelecionarProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buSelecionarProdActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -199,13 +246,14 @@ public class MenuProdutos extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(buConsultarProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buExcluirProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buVoltarProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buAlterarProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buCadastrarProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buSelecionarProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buVoltarProd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buConsultarProd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buInserirProd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,16 +271,18 @@ public class MenuProdutos extends javax.swing.JDialog {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(buCadastrarProd)
+                .addComponent(buInserirProd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buAlterarProd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buExcluirProd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buConsultarProd)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buSelecionarProd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buVoltarProd)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -255,12 +305,12 @@ public class MenuProdutos extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_buVoltarProdActionPerformed
 
-    private void buCadastrarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buCadastrarProdActionPerformed
+    private void buInserirProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buInserirProdActionPerformed
         Produto produto = new Produto();
         if (MenuCadProduto.executar(null, OperacaoCadastro.ocIncluir, produto)) {
             modeloProduto.incluirProduto(produtoBD.inserirProduto(produto));
         }
-    }//GEN-LAST:event_buCadastrarProdActionPerformed
+    }//GEN-LAST:event_buInserirProdActionPerformed
 
     private void buAlterarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buAlterarProdActionPerformed
         int indice = tabProdutos.getSelectedRow();
@@ -301,6 +351,20 @@ public class MenuProdutos extends javax.swing.JDialog {
             atualizarModelo(produtos);
         }
     }//GEN-LAST:event_buBuscarProdActionPerformed
+
+    private void buSelecionarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buSelecionarProdActionPerformed
+        int indice = tabProdutos.getSelectedRow();
+        if (indice >= 0) {
+            Produto produto = modeloProduto.obterProduto(indice);
+            prod.atualizarCodigo(produto.obterCodigo());
+            prod.atualizarNome(produto.obterNome());
+            prod.atualizarPreco(produto.obterPreco());
+            prod.atualizarEstoque(produto.obterEstoque());
+            
+            confirmado=true;
+            dispose();
+        }
+    }//GEN-LAST:event_buSelecionarProdActionPerformed
 
     /**
      * @param args the command line arguments
@@ -347,9 +411,10 @@ public class MenuProdutos extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buAlterarProd;
     private javax.swing.JButton buBuscarProd;
-    private javax.swing.JButton buCadastrarProd;
     private javax.swing.JButton buConsultarProd;
     private javax.swing.JButton buExcluirProd;
+    private javax.swing.JButton buInserirProd;
+    private javax.swing.JButton buSelecionarProd;
     private javax.swing.JButton buVoltarProd;
     private javax.swing.JComboBox<String> cbConsultaProd;
     private javax.swing.JLabel jLabel1;

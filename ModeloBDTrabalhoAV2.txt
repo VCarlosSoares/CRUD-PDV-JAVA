@@ -20,6 +20,7 @@ create table forma_pagamento(CODIGO_FORMA_PAG int primary key auto_increment,
 
 create table item_venda(CODIGO_VENDA int, 
 		        CODIGO_PRODUTO int, 
+			NOME_PRODUTO varchar(50) not null,
 			QUANTIDADE int not null, 
 			PRECO_UNIT float, 
 			PRECO_TOTAL float);
@@ -29,7 +30,7 @@ create table produto(CODIGO_PRODUTO int primary key auto_increment,
 		     PRECO float not null, 
 		     ESTOQUE int not null);
 
-create table venda(CODIGO_VENDA int not null unique auto_increment, 
+create table venda(CODIGO_VENDA int primary key auto_increment, 
 		   DATA date not null, 
 		   CODIGO_CLIENTE int, 
 		   PRECO_TOTAL float, 
@@ -40,8 +41,7 @@ alter table item_venda add (foreign key (CODIGO_VENDA) references venda(CODIGO_V
 			    primary key (CODIGO_VENDA, CODIGO_PRODUTO));
 
 alter table venda add (foreign key (CODIGO_CLIENTE) references cliente(CODIGO_CLIENTE) ON delete cascade ON update cascade, 
-		       foreign key (CODIGO_FORMA_PAG) references forma_pagamento(CODIGO_FORMA_PAG) ON delete cascade ON update cascade,
-		       primary key (CODIGO_VENDA, CODIGO_CLIENTE, CODIGO_FORMA_PAG));
+		       foreign key (CODIGO_FORMA_PAG) references forma_pagamento(CODIGO_FORMA_PAG) ON delete cascade ON update cascade);
 
 /*alter table venda modify CODIGO_CLIENTE int not null;
   alter table venda modify CODIGO_FORMA_PAG int not null; */

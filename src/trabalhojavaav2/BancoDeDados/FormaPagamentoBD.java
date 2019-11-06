@@ -169,5 +169,38 @@ public class FormaPagamentoBD {
         }
         return null;
     }
-    
+    public FormaPagamento buscarItensVendaPorEspecificacao(String coluna, String dado) {
+        FormaPagamento formaPagamento = new FormaPagamento();
+        formaPagamento = null;
+        Connection conexao = SingletonConexao.getInstance().obterConexao();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        if (conexao != null) {
+            try {
+                String sql;
+                if (coluna.equals("CODIGO_FORMA_PAG")) {
+                    sql = "select * from forma_pagamento where "+coluna+" = "+Integer.parseInt(dado)+";";
+                } else {
+                    sql = "select * from forma_pagamento where "+coluna+" like '%"+dado+"%';";
+                }
+                
+                stmt = conexao.prepareStatement(sql);
+                rs = stmt.executeQuery();
+                
+                while (rs.next()) {
+                    formaPagamento = retornarFormaPagamento(rs);
+                }
+                
+                conexao.commit();
+                
+            } catch (SQLException e) {
+                try {
+                    conexao.rollback();
+                } catch (SQLException ex) { }
+            } finally {
+                SingletonConexao.getInstance().fecharConexao(conexao, stmt, rs);
+            }
+        }
+        return formaPagamento;
+    }
 }
